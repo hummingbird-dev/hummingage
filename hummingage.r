@@ -213,9 +213,14 @@ hummingage <- function(path,infile,segments,DiscardOutliers,EstimateNullRate,tok
     ##--------------------------------------------------------------------------------------------##
     ## apply the Bayesian approach, i.e. for the Gaussian assumption the weighted mean
     BayesFittedRates <- (fittedRates * sigmaRates^2 + accRates * fittedError^2)/(fittedError^2 + sigmaRates^2)
+    ## disable Bayes
+    ##BayesFittedRates <- fittedRates
     
     ## and the weighted std
     BayesSigmaRates <- sqrt((fittedError^2 * sigmaRates^2)/(fittedError^2 + sigmaRates^2))
+    ## disable Bayes
+    ##BayesSigmaRates <- fittedError
+
     
     ## calculate the ages from the rates
     ageFit <- cumsum(BayesFittedRates * c(NullDiff,diffDepths))
