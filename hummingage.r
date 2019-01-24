@@ -234,7 +234,7 @@ hummingage <- function(path,infile,segments,DiscardOutliers,EstimateNullRate,tok
         ageFitError[i+1] <- sqrt(ageFitError[i]^2+(BayesSigmaRates[i+1]*diffDepths[i])^2)
     }
     ##--------------------------------------------------------------------------------------------##
-    
+
 
     ##--------------------------------------------------------------------------------------------##
     ## plotting the intermediate result of fitted segments
