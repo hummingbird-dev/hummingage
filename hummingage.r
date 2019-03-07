@@ -238,11 +238,11 @@ hummingage <- function(path,infile,segments,DiscardOutliers,EstimateNullRate,tok
 
     ##--------------------------------------------------------------------------------------------##
     ## plotting the intermediate result of fitted segments
-    for (i in plot_format){
-        if (i == "png"){
+    for (k in plot_format){
+        if (k == "png"){
             png(filename=paste(path,token,"_intermediate.png",sep=""),width=2000,height=1400,pointsize=10)#,width=11,height=8)
         }
-        if (i == "pdf"){
+        if (k == "pdf"){
             pdf(file=paste(path,token,"_intermediate.pdf",sep=""),width=40,height=28)#,width=11,height=8)
         }
         
@@ -286,11 +286,11 @@ hummingage <- function(path,infile,segments,DiscardOutliers,EstimateNullRate,tok
 
     ##--------------------------------------------------------------------------------------------##
     ## plotting ages
-    for (i in plot_format){
-    if (i == "png"){
+    for (k in plot_format){
+    if (k == "png"){
             png(filename=paste(path,token,"_ages.png",sep=""),width=2000,height=1400,pointsize=10)#,width=11,height=8)
         }
-    if (i == "pdf"){
+    if (k == "pdf"){
             pdf(file=paste(path,token,"_ages.pdf",sep=""),width=40,height=28)#,width=11,height=8)
         }
 
@@ -336,11 +336,11 @@ hummingage <- function(path,infile,segments,DiscardOutliers,EstimateNullRate,tok
 
     ##--------------------------------------------------------------------------------------------##
     ## plotting rates
-    for (i in plot_format){
-    if (i == "png"){
+    for (k in plot_format){
+    if (k == "png"){
         png(filename=paste(path,token,"_rates.png",sep=""),width=2000,height=1400,pointsize=10)#,width=11,height=8)
         }
-    if (i == "pdf"){
+    if (k == "pdf"){
             pdf(file=paste(path,token,"_rates.pdf",sep=""),width=40,height=28)#,width=11,height=8)
         }
         
