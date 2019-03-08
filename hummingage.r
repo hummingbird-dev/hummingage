@@ -238,98 +238,119 @@ hummingage <- function(path,infile,segments,DiscardOutliers,EstimateNullRate,tok
 
     ##--------------------------------------------------------------------------------------------##
     ## plotting the intermediate result of fitted segments
-    for (k in plot_format){
-        if (k == "png"){
-            png(filename=paste(path,token,"_intermediate.png",sep=""),width=2000,height=1400,pointsize=10)#,width=11,height=8)
-        }
-        if (k == "pdf"){
-            pdf(file=paste(path,token,"_intermediate.pdf",sep=""),width=40,height=28)#,width=11,height=8)
-        }
-        
-        par(mar=c(14,14,4,2),mgp=c(10,4,0),bg=rgb(248/255,250/255,252/255))
+    for (k in plot <- format){
+        if (k == "jupyter"){
+            Ascale <- 1 #4
+            Bscale <- 1 #6
+            Cscale <- 2 #8
+            Dscale <- 4 #12
+        } else {
+            Ascale <- 4
+            Bscale <- 6
+            Cscale <- 8
+            Dscale <- 12
 
-        
+            par(mar=c(14,14,4,2),mgp=c(10,4,0),bg=rgb(248/255,250/255,252/255))
+            if (k == "png"){
+                png(filename=paste(path,token,"_intermediate.png",sep=""),width=2000,height=1400,pointsize=10)#,width=11,height=8)
+            }
+            if (k == "pdf"){
+                pdf(file=paste(path,token,"_intermediate.pdf",sep=""),width=40,height=28)#,width=11,height=8)
+            }
+        }
+
+
         ymin <- min(c(accRates-sigmaRates),na.rm=TRUE)
         ymax <- max(c(accRates+sigmaRates),na.rm=TRUE)
         xmin <- 0 ##min(ageDataOrig$depth)
         xmax <- max(ageDataOrig$depth)
-        plot(ageData$depth,accRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),xlab="Depth [cm]",ylab="Rates [ka/cm]",cex.lab=4,cex.axis=4)
+        plot(ageData$depth,accRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),xlab="Depth [cm]",ylab="Rates [ka/cm]",cex.lab=Ascale,cex.axis=Ascale)
         if (Lsegments > 0) {
             for (i in seq(1,length(segPosPlot))) {
                 par(new=TRUE)
                 segPosDepth <- (ageData$depth[segPosPlot[i]]+ageData$depth[segPosPlot[i]+1])/2
-                plot(c(segPosDepth,segPosDepth),c(ymin,ymax),ylim=c(ymin,ymax),xlim=c(xmin,xmax),col=rgb(200/255,200/255,200/255),type="l",lwd="12",lty=2,xlab="",ylab="",xaxt="n",yaxt="n",cex=8)
+                plot(c(segPosDepth,segPosDepth),c(ymin,ymax),ylim=c(ymin,ymax),xlim=c(xmin,xmax),col=rgb(200/255,200/255,200/255),type="l",lwd=Dscale,lty=2,xlab="",ylab="",xaxt="n",yaxt="n",cex=Cscale)
             }
         }
         par(new=TRUE)
         polygon(c(ageData$depth, rev(ageData$depth)), c(fittedRates-fittedError,
                                                         rev(fittedRates+fittedError)), col=rgb(0.8,0.8,0.8),border=NA)
         par(new=TRUE)
-        plot(ageData$depth,accRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),col=rgb(42/255,190/255,230/255),pch=19,xlab="",ylab="",xaxt="n",yaxt="n",cex=8)
+        plot(ageData$depth,accRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),col=rgb(42/255,190/255,230/255),pch=19,xlab="",ylab="",xaxt="n",yaxt="n",cex=Cscale)
         par(new=TRUE)
-        plot(ageData$depth,fittedRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),xlab="",pch=19,ylab="",xaxt="n",yaxt="n",col="red",cex=4)
+        plot(ageData$depth,fittedRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),xlab="",pch=19,ylab="",xaxt="n",yaxt="n",col="red",cex=Ascale)
         par(new=TRUE)
-        plot(ageData$depth,fittedRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),lwd=8,xlab="",ylab="",xaxt="n",yaxt="n",type="l",col="red",cex=8)
+        plot(ageData$depth,fittedRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),lwd=Cscale,xlab="",ylab="",xaxt="n",yaxt="n",type="l",col="red",cex=Cscale)
 
-        arrows(ageData$depth, accRates-sigmaRates, ageData$depth, 
-               accRates+sigmaRates, length=0.2, angle=90, code=3,col="black",lwd=6,cex=8)
+        arrows(ageData$depth, accRates-sigmaRates, ageData$depth,
+               accRates+sigmaRates, length=0.2, angle=90, code=3,col="black",lwd=Bscale,cex=Cscale)
 
         legend(xmax, ymax, xjust=1,legend=c("data","fit","sequences"),
-               col=c(rgb(42/255,190/255,230/255),"red",rgb(200/255,200/255,200/255)), lwd=c(NaN,8,12), lty=c(1,1,2), pch=c(19,19,NaN), cex=c(6), pt.cex=c(8,4,8))
-
-        dev.off()
+               col=c(rgb(42/255,190/255,230/255),"red",rgb(200/255,200/255,200/255)), lwd=c(NaN,Cscale,Dscale), lty=c(1,1,2), pch=c(19,19,NaN), cex=c(Bscale), pt.cex=c(Cscale,Ascale,Cscale))
+        if (k != "jupyter"){
+            dev.off()
+        }
     }
     ##--------------------------------------------------------------------------------------------##
-
-
 
 
     ##--------------------------------------------------------------------------------------------##
     ## plotting ages
     for (k in plot_format){
-    if (k == "png"){
-            png(filename=paste(path,token,"_ages.png",sep=""),width=2000,height=1400,pointsize=10)#,width=11,height=8)
-        }
-    if (k == "pdf"){
-            pdf(file=paste(path,token,"_ages.pdf",sep=""),width=40,height=28)#,width=11,height=8)
-        }
+        if (k == "jupyter"){
+            Ascale <- 1 #4
+            Bscale <- 1 #6
+            Cscale <- 2 #8
+            Dscale <- 4 #12
+        } else {
+            Ascale <- 4
+            Bscale <- 6
+            Cscale <- 8
+            Dscale <- 12
 
-
-        par(mar=c(14,14,4,2),mgp=c(10,4,0),bg=rgb(248/255,250/255,252/255))
+            par(mar=c(14,14,4,2),mgp=c(10,4,0),bg=rgb(248/255,250/255,252/255))
+            if (k == "png"){
+                png(filename=paste(path,token,"_ages.png",sep=""),width=2000,height=1400,pointsize=10)#,width=11,height=8)
+            }
+            if (k == "pdf"){
+                pdf(file=paste(path,token,"_ages.pdf",sep=""),width=40,height=28)#,width=11,height=8)
+            }
+        }
 
 
         ymin <- min(c(ageData$age-ageData$error,ageDataOrig$age),na.rm=TRUE)
         ymax <- max(c(ageData$age+ageData$error,ageDataOrig$age,ageFit+ageFitError),na.rm=TRUE)
         xmin <- 0 ##min(ageDataOrig$depth)
         xmax <- max(ageDataOrig$depth)
-        plot(ageData$depth,ageData$age,ylim=c(ymin,ymax),xlim=c(xmin,xmax),xlab="Depth [cm]",ylab="Age [ka]",cex.lab=4,cex.axis=4)
+        plot(ageData$depth,ageData$age,ylim=c(ymin,ymax),xlim=c(xmin,xmax),xlab="Depth [cm]",ylab="Age [ka]",cex.lab=Ascale,cex.axis=Ascale)
         if (Lsegments > 0) {
             for (i in seq(1,length(segPosPlot))) {
                 par(new=TRUE)
                 segPosDepth <- (ageData$depth[segPosPlot[i]]+ageData$depth[segPosPlot[i]+1])/2
-                plot(c(segPosDepth,segPosDepth),c(ymin,ymax),ylim=c(ymin,ymax),xlim=c(xmin,xmax),col=rgb(200/255,200/255,200/255),type="l",lwd="12",lty=2,xlab="",ylab="",xaxt="n",yaxt="n",cex=8)
+                plot(c(segPosDepth,segPosDepth),c(ymin,ymax),ylim=c(ymin,ymax),xlim=c(xmin,xmax),col=rgb(200/255,200/255,200/255),type="l",lwd=Dscale,lty=2,xlab="",ylab="",xaxt="n",yaxt="n",cex=Cscale)
             }
         }
         par(new=TRUE)
         polygon(c(ageData$depth, rev(ageData$depth)), c(ageFit-ageFitError,
                                                         rev(ageFit+ageFitError)), col=rgb(0.8,0.8,0.8),border=NA,xlim=c(xmin,xmax),)
         par(new=TRUE)
-        plot(ageData$depth,ageData$age,ylim=c(ymin,ymax),xlim=c(xmin,xmax),col=rgb(42/255,190/255,230/255),pch=19,xlab="",ylab="",xaxt="n",yaxt="n",cex=8)
+        plot(ageData$depth,ageData$age,ylim=c(ymin,ymax),xlim=c(xmin,xmax),col=rgb(42/255,190/255,230/255),pch=19,xlab="",ylab="",xaxt="n",yaxt="n",cex=Cscale)
         par(new=TRUE)
-        plot(ageDataOrig$depth[negRatesIndex],ageDataOrig$age[negRatesIndex],ylim=c(ymin,ymax),xlim=c(xmin,xmax),col=rgb(230/255,190/255,42/255),pch=19,xlab="",ylab="",xaxt="n",yaxt="n",cex=8)
+        plot(ageDataOrig$depth[negRatesIndex],ageDataOrig$age[negRatesIndex],ylim=c(ymin,ymax),xlim=c(xmin,xmax),col=rgb(230/255,190/255,42/255),pch=19,xlab="",ylab="",xaxt="n",yaxt="n",cex=Cscale)
         par(new=TRUE)
-        plot(ageData$depth,ageFit,ylim=c(ymin,ymax),xlim=c(xmin,xmax),xlab="",pch=19,ylab="",xaxt="n",yaxt="n",col="red",cex=4)
+        plot(ageData$depth,ageFit,ylim=c(ymin,ymax),xlim=c(xmin,xmax),xlab="",pch=19,ylab="",xaxt="n",yaxt="n",col="red",cex=Ascale)
         par(new=TRUE)
-        plot(ageData$depth,ageFit,ylim=c(ymin,ymax),xlim=c(xmin,xmax),lwd=8,xlab="",ylab="",xaxt="n",yaxt="n",type="l",col="red",cex=8)
+        plot(ageData$depth,ageFit,ylim=c(ymin,ymax),xlim=c(xmin,xmax),lwd=Cscale,xlab="",ylab="",xaxt="n",yaxt="n",type="l",col="red",cex=Cscale)
 
         arrows(ageDataOrig$depth, ageDataOrig$age-ageDataOrig$error, ageDataOrig$depth, 
-               ageDataOrig$age+ageDataOrig$error, length=0.2, angle=90, code=3,col="black",lwd=6,cex=8)
+               ageDataOrig$age+ageDataOrig$error, length=0.2, angle=90, code=3,col="black",lwd=Bscale,cex=Cscale)
 
         legend(xmax, ymin, xjust=1,yjust=0,legend=c("data","outliers","fit","sequences"),
-               col=c(rgb(42/255,190/255,230/255),rgb(230/255,190/255,42/255),"red",rgb(200/255,200/255,200/255)), lwd=c(NaN,NaN,8,12), lty=c(1,1,1,2), pch=c(19,19,19,NaN), cex=c(6), pt.cex=c(8,8,4,NaN))
+               col=c(rgb(42/255,190/255,230/255),rgb(230/255,190/255,42/255),"red",rgb(200/255,200/255,200/255)), lwd=c(NaN,NaN,Cscale,Dscale), lty=c(1,1,1,2), pch=c(19,19,19,NaN), cex=c(Bscale), pt.cex=c(Cscale,Cscale,Ascale,NaN))
 
-
-        dev.off()
+        if (k != "jupyter"){
+            dev.off()
+        }
     }
     ##--------------------------------------------------------------------------------------------##
 
@@ -337,46 +358,58 @@ hummingage <- function(path,infile,segments,DiscardOutliers,EstimateNullRate,tok
     ##--------------------------------------------------------------------------------------------##
     ## plotting rates
     for (k in plot_format){
-    if (k == "png"){
-        png(filename=paste(path,token,"_rates.png",sep=""),width=2000,height=1400,pointsize=10)#,width=11,height=8)
+        if (k == "jupyter"){
+            Ascale <- 1 #4
+            Bscale <- 1 #6
+            Cscale <- 2 #8
+            Dscale <- 4 #12
+        } else {
+            Ascale <- 4
+            Bscale <- 6
+            Cscale <- 8
+            Dscale <- 12
+
+            par(mar=c(14,14,4,2),mgp=c(10,4,0),bg=rgb(248/255,250/255,252/255))
+            if (k == "png"){
+                png(filename=paste(path,token,"_rates.png",sep=""),width=2000,height=1400,pointsize=10)#,width=11,height=8)
+            }
+            if (k == "pdf"){
+                pdf(file=paste(path,token,"_rates.pdf",sep=""),width=40,height=28)#,width=11,height=8)
+            }
         }
-    if (k == "pdf"){
-            pdf(file=paste(path,token,"_rates.pdf",sep=""),width=40,height=28)#,width=11,height=8)
-        }
-        
-        par(mar=c(14,14,4,2),mgp=c(10,4,0),bg=rgb(248/255,250/255,252/255))
         
         ymin <- min(c(accRates-sigmaRates),na.rm=TRUE)
         ymax <- max(c(accRates+sigmaRates),na.rm=TRUE)
 
         xmin <- 0 ##min(ageDataOrig$depth)
         xmax <- max(ageDataOrig$depth)
-        plot(ageData$depth,accRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),xlab="Depth [cm]",ylab="Rates [ka/cm]",cex.lab=4,cex.axis=4)
+        plot(ageData$depth,accRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),xlab="Depth [cm]",ylab="Rates [ka/cm]",cex.lab=Ascale,cex.axis=Ascale)
         if (Lsegments > 0) {
             for (i in seq(1,length(segPosPlot))) {
                 par(new=TRUE)
                 segPosDepth <- (ageData$depth[segPosPlot[i]]+ageData$depth[segPosPlot[i]+1])/2
-                plot(c(segPosDepth,segPosDepth),c(ymin,ymax),ylim=c(ymin,ymax),xlim=c(xmin,xmax),col=rgb(200/255,200/255,200/255),type="l",lwd="12",lty=2,xlab="",ylab="",xaxt="n",yaxt="n",cex=8)
+                plot(c(segPosDepth,segPosDepth),c(ymin,ymax),ylim=c(ymin,ymax),xlim=c(xmin,xmax),col=rgb(200/255,200/255,200/255),type="l",lwd=Dscale,lty=2,xlab="",ylab="",xaxt="n",yaxt="n",cex=Cscale)
             }
         }
         par(new=TRUE)
         polygon(c(ageData$depth, rev(ageData$depth)), c(BayesFittedRates-BayesSigmaRates,
                                                         rev(BayesFittedRates+BayesSigmaRates)), col=rgb(0.8,0.8,0.8),border=NA)
         par(new=TRUE)
-        plot(ageData$depth,accRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),col=rgb(42/255,190/255,230/255),pch=19,xlab="",ylab="",xaxt="n",yaxt="n",cex=8)
+        plot(ageData$depth,accRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),col=rgb(42/255,190/255,230/255),pch=19,xlab="",ylab="",xaxt="n",yaxt="n",cex=Cscale)
         par(new=TRUE)
-        plot(ageData$depth,BayesFittedRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),xlab="",pch=19,ylab="",xaxt="n",yaxt="n",col="red",cex=4)
+        plot(ageData$depth,BayesFittedRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),xlab="",pch=19,ylab="",xaxt="n",yaxt="n",col="red",cex=Ascale)
         par(new=TRUE)
-        plot(ageData$depth,BayesFittedRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),lwd=8,xlab="",ylab="",xaxt="n",yaxt="n",type="l",col="red",cex=8)
+        plot(ageData$depth,BayesFittedRates,ylim=c(ymin,ymax),xlim=c(xmin,xmax),lwd=Cscale,xlab="",ylab="",xaxt="n",yaxt="n",type="l",col="red",cex=Cscale)
 
         arrows(ageData$depth, accRates-sigmaRates, ageData$depth, 
-               accRates+sigmaRates, length=0.2, angle=90, code=3,col="black",lwd=6,cex=8)
+               accRates+sigmaRates, length=0.2, angle=90, code=3,col="black",lwd=Bscale,cex=Cscale)
 
         legend(xmax, ymax, xjust=1,legend=c("data","fit","sequences"),
-               col=c(rgb(42/255,190/255,230/255),"red",rgb(200/255,200/255,200/255)), lwd=c(NaN,8,12), lty=c(1,1,2), pch=c(19,19,NaN), cex=c(6), pt.cex=c(8,4,8))
+               col=c(rgb(42/255,190/255,230/255),"red",rgb(200/255,200/255,200/255)), lwd=c(NaN,Cscale,Dscale), lty=c(1,1,2), pch=c(19,19,NaN), cex=c(Bscale), pt.cex=c(Cscale,Ascale,Cscale))
 
-
-        dev.off()
+        if (k != "jupyter"){
+            dev.off()
+        }
     }
     ##--------------------------------------------------------------------------------------------##
 
